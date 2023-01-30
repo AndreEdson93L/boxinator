@@ -24,24 +24,9 @@ public class Student {
 
     @OneToOne(mappedBy = "student")
     private Project project;
-
-    @JsonGetter("project")
-    public Integer projectGetter() {
-        if(project == null)
-            return null;
-        return project.getId();
-    }
-
     @ManyToOne
     @JoinColumn(name = "professor_id")
     private Professor professor;
-
-    @JsonGetter("professor")
-    public String professorGetter() {
-        if(professor == null)
-            return null;
-        return "api/v1/professors/" + professor.getId();
-    }
 
     @ManyToMany
     @JoinTable(
@@ -50,14 +35,5 @@ public class Student {
             inverseJoinColumns = {@JoinColumn(name = "subject_id")}
     )
     private Set<Subject> subjects;
-
-    @JsonGetter("subjects")
-    public List<String> subjectsGetter() {
-        if(subjects == null)
-            return null;
-        return subjects.stream()
-                .map(s -> "api/v1/subjects/" + s.getId())
-                .collect(Collectors.toList());
-    }
 }
 

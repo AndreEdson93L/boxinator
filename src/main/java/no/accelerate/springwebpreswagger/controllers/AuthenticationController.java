@@ -11,6 +11,7 @@ import no.accelerate.springwebpreswagger.models.User;
 import no.accelerate.springwebpreswagger.models.dto.user.LoginDTO;
 import no.accelerate.springwebpreswagger.models.dto.user.RegistrationDTO;
 import no.accelerate.springwebpreswagger.repositories.UserRepository;
+import no.accelerate.springwebpreswagger.utilities.Utility;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +52,7 @@ public class AuthenticationController {
             )
     })
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO, HttpSession session) {
+
         // Find the user by email
         Set<User> users = userRepository.findByEmail(loginDTO.getEmail());
         if (users.isEmpty()) {
@@ -59,8 +61,9 @@ public class AuthenticationController {
 
         User user = users.iterator().next();
 
-        // Check if the password is correct
-        if (!user.getPassword().equals(hashPassword(loginDTO.getPassword()))) {
+        // Verify the provided password using the stored salt and hashed password
+        String hashedPassword = Utility.hashPassword(loginDTO.getPassword(), user.getSalt());
+        if (user == null || !hashedPassword.equals(user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
 
@@ -123,8 +126,12 @@ public class AuthenticationController {
         // Convert DTO to User entity
         User newUser = convertDtoToUser(registrationDTO);
 
-        // Encode the password
-        newUser.setPassword(hashPassword(newUser.getPassword()));
+        // Generate a salt for the new user
+        String salt = Utility.generateSalt();
+
+        // Encode the password with the salt
+        newUser.setPassword(Utility.hashPassword(registrationDTO.getPassword(), salt));
+        newUser.setSalt(salt);
 
         // Save the new user (error I have in the comment below).
         //Inferred type 'S' for type parameter 'S' is not within its bound; should implement 'org.apache.catalina.User'
@@ -136,6 +143,20 @@ public class AuthenticationController {
                 .status(HttpStatus.CREATED)
                 .body("User registered successfully!");
     }
+
+    @GetMapping("current-user")
+    public ResponseEntity<?> getCurrentUser(HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("No user is currently logged in.");
+        }
+
+        // You might want to return a DTO instead of the full User object, depending on the data you want to expose
+        return ResponseEntity.ok(currentUser);
+    }
+
 
     private User convertDtoToUser(RegistrationDTO registrationDTO) {
         User user = new User();
@@ -149,19 +170,5 @@ public class AuthenticationController {
         user.setContactNumber(registrationDTO.getContactNumber());
 
         return user;
-    }
-
-    private String hashPassword(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                hexString.append(String.format("%02x", b));
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error hashing password", e);
-        }
     }
 }

@@ -5,16 +5,20 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import no.accelerate.springwebpreswagger.models.User;
+import no.accelerate.springwebpreswagger.models.dto.user.LoginDTO;
 import no.accelerate.springwebpreswagger.models.dto.user.RegistrationDTO;
 import no.accelerate.springwebpreswagger.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/auth")
@@ -26,9 +30,68 @@ public class AuthenticationController {
         this.userRepository = userRepository;
     }
 
-    // POST /login endpoint
+    @PostMapping("login")
+    @Operation(summary = "Log in a user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User logged in successfully",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = String.class))
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Invalid email or password",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = String.class))
+                    }
+            )
+    })
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO, HttpSession session) {
+        // Find the user by email
+        Set<User> users = userRepository.findByEmail(loginDTO.getEmail());
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        }
 
-    @PostMapping("/register")
+        User user = users.iterator().next();
+
+        // Check if the password is correct
+        if (!user.getPassword().equals(hashPassword(loginDTO.getPassword()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        }
+
+        // Store user information in the session
+        session.setAttribute("user", user);
+
+        // Return a successful login response
+        return ResponseEntity.ok().body("User logged in successfully!");
+    }
+
+    @GetMapping("logout")
+    @Operation(summary = "Log out a user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User logged out successfully",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = String.class))
+                    }
+            )
+    })
+    public ResponseEntity<?> logout(HttpSession session) {
+        // Invalidate the session
+        session.invalidate();
+
+        // Return a successful logout response
+        return ResponseEntity.ok().body("User logged out successfully!");
+    }
+
+    @PostMapping("register")
     @Operation(summary = "Register a new user")
     @ApiResponses(value = {
             @ApiResponse(
@@ -61,7 +124,7 @@ public class AuthenticationController {
         User newUser = convertDtoToUser(registrationDTO);
 
         // Encode the password
-        newUser.setPassword(newUser.getPassword());
+        newUser.setPassword(hashPassword(newUser.getPassword()));
 
         // Save the new user (error I have in the comment below).
         //Inferred type 'S' for type parameter 'S' is not within its bound; should implement 'org.apache.catalina.User'
@@ -86,5 +149,19 @@ public class AuthenticationController {
         user.setContactNumber(registrationDTO.getContactNumber());
 
         return user;
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error hashing password", e);
+        }
     }
 }

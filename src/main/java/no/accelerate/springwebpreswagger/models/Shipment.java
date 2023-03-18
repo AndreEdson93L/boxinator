@@ -50,6 +50,6 @@ public class Shipment {
     @Column(nullable = false)
     private String destination;
     public enum ShipmentStatus {
-        CREATED, RECIEVED, INTRANSIT, COMPLETED
+        CREATED, RECIEVED, INTRANSIT, COMPLETED, CANCELLED
     }
 }

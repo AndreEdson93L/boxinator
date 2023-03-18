@@ -8,13 +8,15 @@ import java.util.List;
 
 public interface ShipmentService extends CrudService<Shipment, Integer> {
 
-    List<Shipment> findCreatedShipments(User customer);
+    List<Shipment> findCreatedShipments(Integer id);
 
-    List<Shipment> findIntransitShipments(User customer);
+    List<Shipment> findIntransitShipments(Integer id);
 
-    List<Shipment> findReceivedShipments(User customer);
+    List<Shipment> findReceivedShipments(Integer id);
 
-    List<Shipment> findCompletedShipments(User customer);
+    List<Shipment> findCompletedShipments(Integer id);
+
+    List<Shipment> findCancelledShipments(Integer id);
 
     List<Shipment> findByCustomerId(Integer id);
     String getReceiverName(Integer id);
@@ -24,4 +26,5 @@ public interface ShipmentService extends CrudService<Shipment, Integer> {
     String getBoxColor(Integer id);
 
     String getDestination(Integer id);
+    public List<Shipment> findAllShipmentsByCustomerId(Integer id);
 }

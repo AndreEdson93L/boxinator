@@ -1,10 +1,16 @@
 package no.accelerate.springwebpreswagger.utilities;
 
+import jakarta.servlet.http.HttpSession;
+import no.accelerate.springwebpreswagger.models.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Optional;
 
 public class Utility {
 
@@ -33,5 +39,10 @@ public class Utility {
             hexString.append(hex);
         }
         return hexString.toString();
+    }
+
+    public static Optional<User> getCurrentUser(HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+        return Optional.ofNullable(currentUser);
     }
 }

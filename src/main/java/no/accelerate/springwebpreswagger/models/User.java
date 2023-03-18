@@ -42,4 +42,7 @@ public class User {
 
     @Column(nullable = false, length = 20)
     private String contactNumber;
+
+    @Column(nullable = true)
+    private boolean isAdmin;
 }

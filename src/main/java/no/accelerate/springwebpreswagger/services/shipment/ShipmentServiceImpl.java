@@ -4,6 +4,7 @@ import no.accelerate.springwebpreswagger.exceptions.ShipmentNotFoundException;
 import no.accelerate.springwebpreswagger.models.Shipment;
 import no.accelerate.springwebpreswagger.models.User;
 import no.accelerate.springwebpreswagger.repositories.ShipmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -12,6 +13,7 @@ import java.util.List;
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
     private final ShipmentRepository shipmentRepository;
+
 
     public ShipmentServiceImpl(ShipmentRepository shipmentRepository) {
         this.shipmentRepository = shipmentRepository;
@@ -52,23 +54,28 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
-    public List<Shipment> findCreatedShipments(User customer) {
-        return shipmentRepository.findCreatedShipments(customer);
+    public List<Shipment> findCreatedShipments(Integer id) {
+        return shipmentRepository.findCreatedShipments(id);
     }
 
     @Override
-    public List<Shipment> findIntransitShipments(User customer) {
-        return shipmentRepository.findIntransitShipments(customer);
+    public List<Shipment> findIntransitShipments(Integer id) {
+        return shipmentRepository.findIntransitShipments(id);
     }
 
     @Override
-    public List<Shipment> findReceivedShipments(User customer) {
-        return shipmentRepository.findReceivedShipments(customer);
+    public List<Shipment> findReceivedShipments(Integer id) {
+        return shipmentRepository.findReceivedShipments(id);
     }
 
     @Override
-    public List<Shipment> findCompletedShipments(User customer) {
-        return shipmentRepository.findCompletedShipments(customer);
+    public List<Shipment> findCompletedShipments(Integer id) {
+        return shipmentRepository.findCompletedShipments(id);
+    }
+
+    @Override
+    public List<Shipment> findCancelledShipments(Integer id) {
+        return shipmentRepository.findCancelledShipments(id);
     }
 
     @Override
@@ -95,4 +102,10 @@ public class ShipmentServiceImpl implements ShipmentService {
     public String getDestination(Integer id) {
         return shipmentRepository.findById(id).get().getDestination();
     }
+
+    @Override
+    public List<Shipment> findAllShipmentsByCustomerId(Integer id) {
+        return shipmentRepository.findAllByCustomerId(id);
+    }
+
 }

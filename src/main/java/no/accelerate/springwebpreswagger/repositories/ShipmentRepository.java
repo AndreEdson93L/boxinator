@@ -9,17 +9,21 @@ import java.util.List;
 
 public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
 
-    @Query("SELECT s FROM Shipment s WHERE s.status = 'CREATED' AND s.customer = ?1")
-    List<Shipment> findCreatedShipments(User customer);
+    @Query("SELECT s FROM Shipment s WHERE s.status = 'CREATED' AND s.customer.id = ?1")
+    List<Shipment> findCreatedShipments(Integer id);
 
-    @Query("SELECT s FROM Shipment s WHERE s.status = 'RECIEVED' AND s.customer = ?1")
-    List<Shipment> findReceivedShipments(User customer);
+    @Query("SELECT s FROM Shipment s WHERE s.status = 'RECIEVED' AND s.customer.id = ?1")
+    List<Shipment> findReceivedShipments(Integer id);
 
-    @Query("SELECT s FROM Shipment s WHERE s.status = 'INTRANSIT' AND s.customer = ?1")
-    List<Shipment> findIntransitShipments(User customer);
-    @Query("SELECT s FROM Shipment s WHERE s.status = 'COMPLETED' AND s.customer = ?1")
-    List<Shipment> findCompletedShipments(User customer);
+    @Query("SELECT s FROM Shipment s WHERE s.status = 'INTRANSIT' AND s.customer.id = ?1")
+    List<Shipment> findIntransitShipments(Integer id);
+    @Query("SELECT s FROM Shipment s WHERE s.status = 'COMPLETED' AND s.customer.id = ?1")
+    List<Shipment> findCompletedShipments(Integer id);
 
+    @Query("SELECT s FROM Shipment s WHERE s.status = 'CANCELLED' AND s.customer.id = ?1")
+    List<Shipment> findCancelledShipments(Integer id);
     List<Shipment> findByCustomerId(Integer id);
 
+    @Query("SELECT s FROM Shipment s WHERE s.customer.id like %?1%")
+    List<Shipment> findAllByCustomerId(Integer id);
 }

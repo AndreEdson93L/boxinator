@@ -60,18 +60,6 @@ public class AdminShipmentController {
         return new ResponseEntity<List<ShipmentDTO>>(shipmentDTOs, HttpStatus.OK);
     }
 
-    /*
-    @GetMapping("/complete")
-    public ResponseEntity<List<Shipment>> getCompletedShipments(@PathVariable("customer_id") Integer id) {
-        List<Shipment> completedShipments = shipmentService.findCompletedShipments(id);
-        return new ResponseEntity<List<Shipment>>(completedShipments, HttpStatus.OK);
-    }
-
-    @GetMapping("/cancelled")
-    public ResponseEntity<?> getCancelledShipments(@PathVariable("customer_id") Integer id) {
-        List<Shipment> cancelledShipments = shipmentService.findCancelledShipments(id);
-        return new ResponseEntity<>(cancelledShipments, HttpStatus.OK);
-    }*/
     @GetMapping("/complete")
     public ResponseEntity<List<Shipment>> getCompletedShipments() {
         List<Shipment> completedShipments = shipmentService.findCompletedShipments();

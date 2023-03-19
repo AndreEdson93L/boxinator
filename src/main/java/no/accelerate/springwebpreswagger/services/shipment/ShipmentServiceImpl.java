@@ -74,8 +74,18 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
+    public List<Shipment> findCompletedShipments() {
+        return shipmentRepository.findCompletedShipments();
+    }
+
+    @Override
     public List<Shipment> findCancelledShipments(Integer id) {
         return shipmentRepository.findCancelledShipments(id);
+    }
+
+    @Override
+    public List<Shipment> findCancelledShipments() {
+        return shipmentRepository.findCancelledShipments();
     }
 
     @Override

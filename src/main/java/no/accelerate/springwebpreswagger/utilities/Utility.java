@@ -2,6 +2,7 @@ package no.accelerate.springwebpreswagger.utilities;
 
 import jakarta.servlet.http.HttpSession;
 import no.accelerate.springwebpreswagger.models.User;
+import no.accelerate.springwebpreswagger.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -45,4 +46,8 @@ public class Utility {
         User currentUser = (User) session.getAttribute("user");
         return Optional.ofNullable(currentUser);
     }
+    //public static User findUserByEmail(String email, UserRepository userRepository) {
+    //    return userRepository.findByEmail(email).orElse(null);
+    //}
+
 }

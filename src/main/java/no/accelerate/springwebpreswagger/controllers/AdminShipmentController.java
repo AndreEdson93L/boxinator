@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import no.accelerate.springwebpreswagger.mappers.CustomerMapper;
 import no.accelerate.springwebpreswagger.mappers.ShipmentMapper;
 import no.accelerate.springwebpreswagger.models.Shipment;
-import no.accelerate.springwebpreswagger.models.dto.user.ShipmentDTO;
+import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentDTO;
 import no.accelerate.springwebpreswagger.services.shipment.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,14 +19,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/v1/shipments")
-public class ShipmentController {
+@RequestMapping("api/v1/admin/shipments")
+public class AdminShipmentController {
 
     private final ShipmentService shipmentService;
     private ShipmentMapper shipmentMapper;
     private CustomerMapper customerMapper;
     @Autowired
-    public ShipmentController(ShipmentService shipmentService, ShipmentMapper shipmentMapper, CustomerMapper customerMapper)
+    public AdminShipmentController(ShipmentService shipmentService, ShipmentMapper shipmentMapper, CustomerMapper customerMapper)
     {
         this.shipmentService = shipmentService;
         this.shipmentMapper = shipmentMapper;
@@ -60,7 +60,7 @@ public class ShipmentController {
         return new ResponseEntity<List<ShipmentDTO>>(shipmentDTOs, HttpStatus.OK);
     }
 
-
+    /*
     @GetMapping("/complete")
     public ResponseEntity<List<Shipment>> getCompletedShipments(@PathVariable("customer_id") Integer id) {
         List<Shipment> completedShipments = shipmentService.findCompletedShipments(id);
@@ -70,6 +70,17 @@ public class ShipmentController {
     @GetMapping("/cancelled")
     public ResponseEntity<?> getCancelledShipments(@PathVariable("customer_id") Integer id) {
         List<Shipment> cancelledShipments = shipmentService.findCancelledShipments(id);
+        return new ResponseEntity<>(cancelledShipments, HttpStatus.OK);
+    }*/
+    @GetMapping("/complete")
+    public ResponseEntity<List<Shipment>> getCompletedShipments() {
+        List<Shipment> completedShipments = shipmentService.findCompletedShipments();
+        return new ResponseEntity<List<Shipment>>(completedShipments, HttpStatus.OK);
+    }
+
+    @GetMapping("/cancelled")
+    public ResponseEntity<?> getCancelledShipments() {
+        List<Shipment> cancelledShipments = shipmentService.findCancelledShipments();
         return new ResponseEntity<>(cancelledShipments, HttpStatus.OK);
     }
     @PostMapping

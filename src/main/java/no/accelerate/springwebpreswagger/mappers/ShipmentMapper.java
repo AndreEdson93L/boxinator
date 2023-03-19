@@ -1,7 +1,7 @@
 package no.accelerate.springwebpreswagger.mappers;
 
 import no.accelerate.springwebpreswagger.models.Shipment;
-import no.accelerate.springwebpreswagger.models.dto.user.ShipmentDTO;
+import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

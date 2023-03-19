@@ -7,22 +7,25 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import no.accelerate.springwebpreswagger.mappers.UserMapper;
 import no.accelerate.springwebpreswagger.models.User;
 import no.accelerate.springwebpreswagger.models.dto.user.LoginDTO;
 import no.accelerate.springwebpreswagger.models.dto.user.RegistrationDTO;
 import no.accelerate.springwebpreswagger.repositories.UserRepository;
 import no.accelerate.springwebpreswagger.utilities.Utility;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthenticationController {
-    // Autowired UserRepository
     private final UserRepository userRepository;
-
+    @Autowired
     public AuthenticationController(UserRepository userRepository){
         this.userRepository = userRepository;
     }
@@ -49,8 +52,8 @@ public class AuthenticationController {
     })
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO, HttpSession session) {
 
-        // Find the user by email
-        Set<User> users = userRepository.findByEmail(loginDTO.getEmail());
+        /*Set<User> users = userRepository.findAllByEmail(loginDTO.getEmail());
+
         if (users.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
@@ -59,16 +62,35 @@ public class AuthenticationController {
 
         // Verify the provided password using the stored salt and hashed password
         String hashedPassword = Utility.hashPassword(loginDTO.getPassword(), user.getSalt());
+
         if (user == null || !hashedPassword.equals(user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        } else {
+            // Store user information in the session
+            session.setAttribute("user", user);
         }
 
-        // Store user information in the session
-        session.setAttribute("user", user);
-
         // Return a successful login response
-        return ResponseEntity.ok().body("User logged in successfully!");
+        return ResponseEntity.ok().body("User successfully registered");*/
+
+            Optional<User> userOptional = userRepository.findByEmail(loginDTO.getEmail());
+
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+            }
+
+            User user = userOptional.get();
+            String hashedPassword = Utility.hashPassword(loginDTO.getPassword(), user.getSalt());
+
+            if (!hashedPassword.equals(user.getPassword())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+            } else {
+                session.setAttribute("user", user);
+            }
+
+            return ResponseEntity.ok().body("User successfully logged in");
     }
+
 
     @GetMapping("logout")
     @Operation(summary = "Log out a user")
@@ -113,14 +135,18 @@ public class AuthenticationController {
     public ResponseEntity<?> register(@Valid @RequestBody RegistrationDTO registrationDTO) {
         // Check if the email is already in use
         // ...
-        if(userRepository.findByEmail(registrationDTO.getEmail()).size() >= 1){
+        if(userRepository.findAllByEmail(registrationDTO.getEmail()).size() >= 1){
             return ResponseEntity
                     .badRequest()
                     .body("Error: Email is already in use!");
         }
 
         // Convert DTO to User entity
-        User newUser = convertDtoToUser(registrationDTO);
+        //User newUser = convertDtoToUser(registrationDTO);
+
+        // Convert DTO to User entity
+        User newUser = UserMapper.INSTANCE.convertDtoToUser(registrationDTO);
+        newUser.setAdmin(false);
 
         // Generate a salt for the new user
         String salt = Utility.generateSalt();
@@ -153,19 +179,5 @@ public class AuthenticationController {
         // I might want to return a DTO instead of the full User object, depending on the data I want to expose
         return ResponseEntity.ok(currentUser);
     }
-
-
-    private User convertDtoToUser(RegistrationDTO registrationDTO) {
-        User user = new User();
-        user.setFirstName(registrationDTO.getFirstName());
-        user.setLastName(registrationDTO.getLastName());
-        user.setEmail(registrationDTO.getEmail());
-        user.setPassword(registrationDTO.getPassword());
-        user.setDateOfBirth(registrationDTO.getDateOfBirth());
-        user.setCountryOfResidence(registrationDTO.getCountryOfResidence());
-        user.setPostalCode(registrationDTO.getPostalCode());
-        user.setContactNumber(registrationDTO.getContactNumber());
-
-        return user;
-    }
 }
+

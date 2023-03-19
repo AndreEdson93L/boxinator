@@ -15,8 +15,10 @@ public interface ShipmentService extends CrudService<Shipment, Integer> {
     List<Shipment> findReceivedShipments(Integer id);
 
     List<Shipment> findCompletedShipments(Integer id);
+    List<Shipment> findCompletedShipments();
 
     List<Shipment> findCancelledShipments(Integer id);
+    List<Shipment> findCancelledShipments();
 
     List<Shipment> findByCustomerId(Integer id);
     String getReceiverName(Integer id);

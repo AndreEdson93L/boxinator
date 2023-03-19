@@ -19,9 +19,12 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
     List<Shipment> findIntransitShipments(Integer id);
     @Query("SELECT s FROM Shipment s WHERE s.status = 'COMPLETED' AND s.customer.id = ?1")
     List<Shipment> findCompletedShipments(Integer id);
-
+    @Query("SELECT s FROM Shipment s WHERE s.status = 'COMPLETED'")
+    List<Shipment> findCompletedShipments();
     @Query("SELECT s FROM Shipment s WHERE s.status = 'CANCELLED' AND s.customer.id = ?1")
     List<Shipment> findCancelledShipments(Integer id);
+    @Query("SELECT s FROM Shipment s WHERE s.status = 'CANCELLED'")
+    List<Shipment> findCancelledShipments();
     List<Shipment> findByCustomerId(Integer id);
 
     @Query("SELECT s FROM Shipment s WHERE s.customer.id like %?1%")

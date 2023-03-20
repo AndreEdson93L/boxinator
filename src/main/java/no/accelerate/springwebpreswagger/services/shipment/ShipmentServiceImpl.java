@@ -2,8 +2,6 @@ package no.accelerate.springwebpreswagger.services.shipment;
 
 import no.accelerate.springwebpreswagger.exceptions.ShipmentNotFoundException;
 import no.accelerate.springwebpreswagger.models.Shipment;
-import no.accelerate.springwebpreswagger.models.User;
-import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentDTO;
 import no.accelerate.springwebpreswagger.repositories.ShipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +12,7 @@ import java.util.List;
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
     private final ShipmentRepository shipmentRepository;
-
-
+    @Autowired
     public ShipmentServiceImpl(ShipmentRepository shipmentRepository) {
         this.shipmentRepository = shipmentRepository;
     }

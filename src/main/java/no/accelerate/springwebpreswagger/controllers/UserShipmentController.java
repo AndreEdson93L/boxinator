@@ -27,13 +27,11 @@ public class UserShipmentController {
 
     private final ShipmentService shipmentService;
     private ShipmentMapper shipmentMapper;
-    //private CustomerMapper customerMapper;
     @Autowired
     public UserShipmentController(ShipmentService shipmentService, ShipmentMapper shipmentMapper)
     {
         this.shipmentService = shipmentService;
         this.shipmentMapper = shipmentMapper;
-        //this.customerMapper = customerMapper;
     }
     @GetMapping
     @Operation(summary = "Get all shipments")

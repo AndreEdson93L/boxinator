@@ -11,6 +11,7 @@ import no.accelerate.springwebpreswagger.mappers.UserMapper;
 import no.accelerate.springwebpreswagger.models.User;
 import no.accelerate.springwebpreswagger.models.dto.user.LoginDTO;
 import no.accelerate.springwebpreswagger.models.dto.user.RegistrationDTO;
+import no.accelerate.springwebpreswagger.models.dto.user.UserDTO;
 import no.accelerate.springwebpreswagger.repositories.UserRepository;
 import no.accelerate.springwebpreswagger.utilities.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,11 @@ import java.util.Set;
 @RequestMapping("api/v1/auth")
 public class AuthenticationController {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     @Autowired
-    public AuthenticationController(UserRepository userRepository){
+    public AuthenticationController(UserRepository userRepository, UserMapper userMapper){
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("login")
@@ -146,6 +149,17 @@ public class AuthenticationController {
     }
 
     @GetMapping("current-user")
+    @Operation(summary = "Get current user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User retrieved successfully",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserDTO.class))
+                    }
+            ),
+    })
     public ResponseEntity<?> getCurrentUser(HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) {
@@ -154,9 +168,8 @@ public class AuthenticationController {
                     .body("No user is currently logged in.");
         }
 
-
-        // I might want to return a DTO instead of the full User object, depending on the data I want to expose
-        return ResponseEntity.ok(currentUser);
+        // A DTO object to not expose sensitive details about the user.
+        return ResponseEntity.ok(userMapper.convertUserToUserDTO(currentUser));
     }
 }
 

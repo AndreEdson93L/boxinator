@@ -6,13 +6,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpSession;
-import no.accelerate.springwebpreswagger.mappers.CustomerMapper;
 import no.accelerate.springwebpreswagger.mappers.ShipmentMapper;
 import no.accelerate.springwebpreswagger.models.Shipment;
 import no.accelerate.springwebpreswagger.models.User;
 import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentDTO;
 import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentPostDTO;
 import no.accelerate.springwebpreswagger.services.shipment.ShipmentService;
+import no.accelerate.springwebpreswagger.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +27,13 @@ import java.util.stream.Collectors;
 public class AdminShipmentController {
 
     private final ShipmentService shipmentService;
-    private ShipmentMapper shipmentMapper;
-    //private CustomerMapper customerMapper;
+    private final UserService userService;
+    private final ShipmentMapper shipmentMapper;
+
     @Autowired
-    public AdminShipmentController(ShipmentService shipmentService, ShipmentMapper shipmentMapper)
+    public AdminShipmentController(ShipmentService shipmentService, UserService userService, ShipmentMapper shipmentMapper)
     {
+        this.userService = userService;
         this.shipmentService = shipmentService;
         this.shipmentMapper = shipmentMapper;
         //this.customerMapper = customerMapper;
@@ -263,6 +265,18 @@ public class AdminShipmentController {
     })
     public ResponseEntity<Void> deleteShipment(@PathVariable("shipment_id") Integer id) {
         shipmentService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("/{account_id}")
+    @Operation(summary = "Delete an account by id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Account has been deleted successfully"
+            ),
+    })
+    public ResponseEntity<Void> deleteAccount(@PathVariable("account_id") Integer id) {
+        userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

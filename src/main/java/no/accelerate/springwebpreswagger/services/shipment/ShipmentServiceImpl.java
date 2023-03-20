@@ -118,5 +118,4 @@ public class ShipmentServiceImpl implements ShipmentService {
     public List<Shipment> findAllShipmentsByCustomerId(Integer id) {
         return shipmentRepository.findAllByCustomerId(id);
     }
-
 }

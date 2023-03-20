@@ -16,6 +16,5 @@ public interface ShipmentMapper {
     @Mapping(source = "customer.id", target = "customerId")
     ShipmentPostDTO mapShipmentToShipmentPostDTO(Shipment shipment);
 
-
 }
 

@@ -84,9 +84,12 @@ public class AdminShipmentController {
                     }
             )
     })
-    public ResponseEntity<List<Shipment>> getCompletedShipments() {
+    public ResponseEntity<List<ShipmentDTO>> getCompletedShipments() {
         List<Shipment> completedShipments = shipmentService.findCompletedShipments();
-        return new ResponseEntity<>(completedShipments, HttpStatus.OK);
+        List<ShipmentDTO> shipmentDTOs = completedShipments.stream()
+                .map(shipmentMapper::mapShipmentToShipmentDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
 
     @GetMapping("/cancelled")
@@ -109,9 +112,13 @@ public class AdminShipmentController {
                     }
             )
     })
-    public ResponseEntity<List<Shipment>> getCancelledShipments() {
+    public ResponseEntity<List<ShipmentDTO>> getCancelledShipments() {
         List<Shipment> cancelledShipments = shipmentService.findCancelledShipments();
-        return new ResponseEntity<>(cancelledShipments, HttpStatus.OK);
+        List<ShipmentDTO> shipmentDTOs = cancelledShipments.stream()
+                .map(shipmentMapper::mapShipmentToShipmentDTO)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
     @PostMapping
     @Operation(summary = "Post a shipment")
@@ -202,10 +209,14 @@ public class AdminShipmentController {
                     }
             )
     })
-    public ResponseEntity<List<Shipment>> getAllShipmentsByCustomerId(@PathVariable("customer_id") Integer id) {
+    public ResponseEntity<List<ShipmentDTO>> getAllShipmentsByCustomerId(@PathVariable("customer_id") Integer id) {
 
         List<Shipment> shipments = shipmentService.findAllShipmentsByCustomerId(id);
-        return new ResponseEntity<>(shipments, HttpStatus.OK);
+        List<ShipmentDTO> shipmentDTOs = shipments.stream()
+                .map(shipmentMapper::mapShipmentToShipmentDTO)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
     @PutMapping("/{shipment_id}")
     @Operation(summary = "Update a shipment")

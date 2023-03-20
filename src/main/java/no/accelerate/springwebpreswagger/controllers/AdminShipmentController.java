@@ -28,13 +28,13 @@ public class AdminShipmentController {
 
     private final ShipmentService shipmentService;
     private ShipmentMapper shipmentMapper;
-    private CustomerMapper customerMapper;
+    //private CustomerMapper customerMapper;
     @Autowired
-    public AdminShipmentController(ShipmentService shipmentService, ShipmentMapper shipmentMapper, CustomerMapper customerMapper)
+    public AdminShipmentController(ShipmentService shipmentService, ShipmentMapper shipmentMapper)
     {
         this.shipmentService = shipmentService;
         this.shipmentMapper = shipmentMapper;
-        this.customerMapper = customerMapper;
+        //this.customerMapper = customerMapper;
     }
     @GetMapping
     @Operation(summary = "Get all shipments")
@@ -222,7 +222,7 @@ public class AdminShipmentController {
     @Operation(summary = "Update a shipment")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "204",
+                    responseCode = "200",
                     description = "Shipment has been updated successfully",
                     content = {
                             @Content(mediaType = "application/json",
@@ -246,13 +246,18 @@ public class AdminShipmentController {
         updatedShipment.setId(existingShipment.getId());
         updatedShipment.setCustomerId(existingShipment.getCustomer().getId());
         updatedShipment.setCreatedDate(existingShipment.getCreatedDate());
-        return new ResponseEntity<>(updatedShipment, HttpStatus.OK);
+
+        Shipment updated = shipmentMapper.mapShipmentPostDTOToShipment(updatedShipment);
+        Shipment savedShipment = shipmentService.update(updated);
+        ShipmentPostDTO savedShipmentPostDTO = shipmentMapper.mapShipmentToShipmentPostDTO(savedShipment);
+
+        return new ResponseEntity<>(savedShipmentPostDTO, HttpStatus.OK);
     }
     @DeleteMapping("/{shipment_id}")
     @Operation(summary = "Delete shipment by id")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "204",
+                    responseCode = "200",
                     description = "Shipment has been deleted successfully"
             ),
     })

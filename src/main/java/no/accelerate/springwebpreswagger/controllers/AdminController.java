@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentDTO;
 import no.accelerate.springwebpreswagger.models.dto.user.AdminDTO;
 import no.accelerate.springwebpreswagger.models.User;
 import no.accelerate.springwebpreswagger.mappers.AdminMapper;

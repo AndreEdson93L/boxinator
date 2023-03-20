@@ -2,6 +2,7 @@ package no.accelerate.springwebpreswagger.services.shipment;
 
 import no.accelerate.springwebpreswagger.models.Shipment;
 import no.accelerate.springwebpreswagger.models.User;
+import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentDTO;
 import no.accelerate.springwebpreswagger.services.CrudService;
 
 import java.util.List;

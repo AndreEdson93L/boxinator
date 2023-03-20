@@ -52,27 +52,6 @@ public class AuthenticationController {
     })
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO, HttpSession session) {
 
-        /*Set<User> users = userRepository.findAllByEmail(loginDTO.getEmail());
-
-        if (users.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-        }
-
-        User user = users.iterator().next();
-
-        // Verify the provided password using the stored salt and hashed password
-        String hashedPassword = Utility.hashPassword(loginDTO.getPassword(), user.getSalt());
-
-        if (user == null || !hashedPassword.equals(user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-        } else {
-            // Store user information in the session
-            session.setAttribute("user", user);
-        }
-
-        // Return a successful login response
-        return ResponseEntity.ok().body("User successfully registered");*/
-
             Optional<User> userOptional = userRepository.findByEmail(loginDTO.getEmail());
 
             if (userOptional.isEmpty()) {

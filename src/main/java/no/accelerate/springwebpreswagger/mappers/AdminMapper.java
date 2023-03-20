@@ -2,7 +2,6 @@ package no.accelerate.springwebpreswagger.mappers;
 
 import no.accelerate.springwebpreswagger.models.User;
 import no.accelerate.springwebpreswagger.models.dto.user.AdminDTO;
-import no.accelerate.springwebpreswagger.models.dto.user.RegistrationDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

@@ -2,6 +2,7 @@ package no.accelerate.springwebpreswagger.repositories;
 
 import no.accelerate.springwebpreswagger.models.Shipment;
 import no.accelerate.springwebpreswagger.models.User;
+import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

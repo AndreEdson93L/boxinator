@@ -9,13 +9,13 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", uses = {CustomerMapper.class})
 public interface ShipmentMapper {
-    @Mapping(source = "customer", target = "customerDTO")
+    ShipmentMapper INSTANCE = Mappers.getMapper(ShipmentMapper.class);
     ShipmentDTO mapShipmentToShipmentDTO(Shipment shipment);
     @Mapping(source = "customerId", target = "customer.id")
     Shipment mapShipmentPostDTOToShipment(ShipmentPostDTO shipmentPostDTO);
     @Mapping(source = "customer.id", target = "customerId")
     ShipmentPostDTO mapShipmentToShipmentPostDTO(Shipment shipment);
 
-    //ShipmentMapper INSTANCE = Mappers.getMapper(ShipmentMapper.class);
+
 }
 

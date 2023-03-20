@@ -176,8 +176,10 @@ public class AdminShipmentController {
                     }
             )
     })
-    public ResponseEntity<Shipment> getShipmentById(@PathVariable("shipment_id") Integer id) {
-        return new ResponseEntity<>(shipmentService.findById(id), HttpStatus.OK);
+    public ResponseEntity<ShipmentDTO> getShipmentById(@PathVariable("shipment_id") Integer id) {
+        shipmentMapper.mapShipmentToShipmentDTO(shipmentService.findById(id));
+
+        return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipmentService.findById(id)), HttpStatus.OK);
     }
 
     @GetMapping("/customer/{customer_id}")
@@ -209,30 +211,38 @@ public class AdminShipmentController {
     @Operation(summary = "Update a shipment")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
+                    responseCode = "204",
                     description = "Shipment has been updated successfully",
                     content = {
                             @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ShipmentDTO.class))
+                                    schema = @Schema(implementation = ShipmentPostDTO.class))
                     }
             ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            )
     })
-    public ResponseEntity<Shipment> updateShipment(@PathVariable("shipment_id") Integer id,
-                                                   @RequestBody Shipment updatedShipment) {
+    public ResponseEntity<ShipmentPostDTO> updateShipment(@PathVariable("shipment_id") Integer id,
+                                                   @RequestBody ShipmentPostDTO updatedShipment) {
         Shipment existingShipment = shipmentService.findById(id);
         updatedShipment.setId(existingShipment.getId());
-        return new ResponseEntity<>(shipmentService.update(updatedShipment), HttpStatus.OK);
+        updatedShipment.setCustomerId(existingShipment.getCustomer().getId());
+        updatedShipment.setCreatedDate(existingShipment.getCreatedDate());
+        return new ResponseEntity<>(updatedShipment, HttpStatus.OK);
     }
     @DeleteMapping("/{shipment_id}")
     @Operation(summary = "Delete shipment by id")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
-                    description = "Shipment has been deleted successfully",
-                    content = {
-                            @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ShipmentDTO.class))
-                    }
+                    responseCode = "204",
+                    description = "Shipment has been deleted successfully"
             ),
     })
     public ResponseEntity<Void> deleteShipment(@PathVariable("shipment_id") Integer id) {

@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ShipmentDTO {
-    private CustomerDTO customerDTO;
     private Integer id;
     private Shipment.ShipmentStatus status;
     private LocalDateTime createdDate;

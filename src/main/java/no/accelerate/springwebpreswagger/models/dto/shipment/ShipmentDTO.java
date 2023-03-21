@@ -3,7 +3,6 @@ package no.accelerate.springwebpreswagger.models.dto.shipment;
 import lombok.Getter;
 import lombok.Setter;
 import no.accelerate.springwebpreswagger.models.Shipment;
-import no.accelerate.springwebpreswagger.models.dto.user.CustomerDTO;
 
 import java.time.LocalDateTime;
 

@@ -10,9 +10,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new UserAuthenticationInterceptor())
-                .addPathPatterns("/api/v1/user/shipments/**");
+                .addPathPatterns("/api/v1/user/shipments/**")
+                .addPathPatterns("/settings/countries/**");
 
         registry.addInterceptor(new AdminAuthenticationInterceptor())
-                .addPathPatterns("/api/v1/admin/shipments/**");
+                .addPathPatterns("/api/v1/admin/shipments/**")
+                .addPathPatterns("/settings/countries/**");
     }
 }

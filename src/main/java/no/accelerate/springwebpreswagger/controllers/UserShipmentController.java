@@ -6,11 +6,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import no.accelerate.springwebpreswagger.mappers.ShipmentMapper;
+import no.accelerate.springwebpreswagger.mappers.UserMapper;
 import no.accelerate.springwebpreswagger.models.Shipment;
 import no.accelerate.springwebpreswagger.models.User;
 import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentDTO;
 import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentPostDTO;
+import no.accelerate.springwebpreswagger.models.dto.user.UserPostDTO;
+import no.accelerate.springwebpreswagger.repositories.ShipmentRepository;
+import no.accelerate.springwebpreswagger.repositories.UserRepository;
 import no.accelerate.springwebpreswagger.services.shipment.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,11 +32,15 @@ public class UserShipmentController {
 
     private final ShipmentService shipmentService;
     private ShipmentMapper shipmentMapper;
+    private ShipmentRepository shipmentRepository;
+    private UserRepository userRepository;
     @Autowired
-    public UserShipmentController(ShipmentService shipmentService, ShipmentMapper shipmentMapper)
+    public UserShipmentController(ShipmentService shipmentService, ShipmentMapper shipmentMapper, ShipmentRepository shipmentRepository, UserRepository userRepository)
     {
         this.shipmentService = shipmentService;
         this.shipmentMapper = shipmentMapper;
+        this.shipmentRepository = shipmentRepository;
+        this.userRepository = userRepository;
     }
     @GetMapping
     @Operation(summary = "Get all shipments")
@@ -251,8 +260,49 @@ public class UserShipmentController {
 
         Shipment shipmentById = shipmentService.findAllShipmentsByCustomerId(currentUser.getId()).get(id);
         shipmentById.setStatus(Shipment.ShipmentStatus.CANCELLED);
-        shipmentService.add(shipmentById);
+        shipmentRepository.save(shipmentById);
 
         return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipmentById), HttpStatus.OK);
+    }
+    @PutMapping("/account/update")
+    @Operation(summary = "Update account")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Account has been updated successfully",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserPostDTO.class))
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            )
+    })
+    public ResponseEntity<?> updateUser(
+            HttpSession session,
+            @Valid @RequestBody UserPostDTO userPostDTO) {
+
+        User currentUser = (User) session.getAttribute("user");
+
+        if(currentUser == null){
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("No user is currently logged in.");
+        }
+
+        // Convert DTO to User entity
+        User newUser = UserMapper.INSTANCE.convertUserPostDtoToUser(userPostDTO);
+
+        // Return a successful registration response
+
+        return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 }

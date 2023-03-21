@@ -6,11 +6,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import no.accelerate.springwebpreswagger.mappers.ShipmentMapper;
+import no.accelerate.springwebpreswagger.mappers.UserMapper;
 import no.accelerate.springwebpreswagger.models.Shipment;
 import no.accelerate.springwebpreswagger.models.User;
 import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentDTO;
 import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentPostDTO;
+import no.accelerate.springwebpreswagger.models.dto.user.UserPostDTO;
 import no.accelerate.springwebpreswagger.services.shipment.ShipmentService;
 import no.accelerate.springwebpreswagger.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +32,14 @@ public class AdminShipmentController {
     private final ShipmentService shipmentService;
     private final UserService userService;
     private final ShipmentMapper shipmentMapper;
-
+    private final UserMapper userMapper;
     @Autowired
-    public AdminShipmentController(ShipmentService shipmentService, UserService userService, ShipmentMapper shipmentMapper)
+    public AdminShipmentController(ShipmentService shipmentService, UserService userService, ShipmentMapper shipmentMapper, UserMapper userMapper)
     {
+        this.userMapper = userMapper;
         this.userService = userService;
         this.shipmentService = shipmentService;
         this.shipmentMapper = shipmentMapper;
-        //this.customerMapper = customerMapper;
     }
     @GetMapping
     @Operation(summary = "Get all shipments")
@@ -255,7 +258,7 @@ public class AdminShipmentController {
 
         return new ResponseEntity<>(savedShipmentPostDTO, HttpStatus.OK);
     }
-    @DeleteMapping("/{shipment_id}")
+    @DeleteMapping("/shipment/{shipment_id}")
     @Operation(summary = "Delete shipment by id")
     @ApiResponses(value = {
             @ApiResponse(
@@ -279,4 +282,67 @@ public class AdminShipmentController {
         userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @PutMapping("/account/{userId}")
+    @Operation(summary = "Update account by id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Account has been updated successfully",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserPostDTO.class))
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            )
+    })
+    public ResponseEntity<?> updateUser(
+            @PathVariable Integer userId,
+            @RequestBody UserPostDTO updateUserPostDTO) {
+        /*
+        User existingUser = userService.findById(id);
+
+        updateUserPostDTO.setId(existingUser.getId());
+        updateUserPostDTO.setAdmin(existingUser.isAdmin());
+
+        User updatedUser = userMapper.convertUserPostDtoToUser(updateUserPostDTO);
+        User savedUser = userService.update(updatedUser);
+        UserPostDTO savedUserPostDTO = userMapper.convertUserToUserPostDto(savedUser);
+
+        return new ResponseEntity<>(savedUserPostDTO, HttpStatus.OK);*/
+
+        /*
+        // Find the user by userId
+        User existingUser = userService.findById(id);
+
+        System.out.println(existingUser);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+
+        // Update the user's properties using the UserMapper
+        userMapper.updateUserFromUserPostDTO(updateUserPostDTO, existingUser);
+
+        // Save the updated user in the database
+        userService.update(existingUser);
+
+        // Return the updated user as a response
+        return ResponseEntity.ok(existingUser);*/
+
+        User user = userService.updateUser(userId, userMapper.convertUserPostDtoToUser(updateUserPostDTO));
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userMapper.convertUserToUserDTO(user));
+    }
+
+
 }

@@ -267,11 +267,10 @@ public class UserShipmentController {
                     .body("No user is currently logged in.");
         }
 
-        Shipment shipmentById = shipmentService.findAllShipmentsByCustomerId(currentUser.getId()).get(id);
-        shipmentById.setStatus(Shipment.ShipmentStatus.CANCELLED);
-        shipmentRepository.save(shipmentById);
+        Shipment shipment = shipmentService.findByIdAndCustomerId(id, currentUser.getId());
+        shipment.setStatus(Shipment.ShipmentStatus.CANCELLED);
 
-        return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipmentById), HttpStatus.OK);
+        return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipment), HttpStatus.OK);
     }
     @PutMapping("/account/update")
     @Operation(summary = "Update account")

@@ -307,35 +307,6 @@ public class AdminShipmentController {
     public ResponseEntity<?> updateUser(
             @PathVariable Integer userId,
             @RequestBody UserPostDTO updateUserPostDTO) {
-        /*
-        User existingUser = userService.findById(id);
-
-        updateUserPostDTO.setId(existingUser.getId());
-        updateUserPostDTO.setAdmin(existingUser.isAdmin());
-
-        User updatedUser = userMapper.convertUserPostDtoToUser(updateUserPostDTO);
-        User savedUser = userService.update(updatedUser);
-        UserPostDTO savedUserPostDTO = userMapper.convertUserToUserPostDto(savedUser);
-
-        return new ResponseEntity<>(savedUserPostDTO, HttpStatus.OK);*/
-
-        /*
-        // Find the user by userId
-        User existingUser = userService.findById(id);
-
-        System.out.println(existingUser);
-        if (existingUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
-
-        // Update the user's properties using the UserMapper
-        userMapper.updateUserFromUserPostDTO(updateUserPostDTO, existingUser);
-
-        // Save the updated user in the database
-        userService.update(existingUser);
-
-        // Return the updated user as a response
-        return ResponseEntity.ok(existingUser);*/
 
         User user = userService.updateUser(userId, userMapper.convertUserPostDtoToUser(updateUserPostDTO));
         if (user == null) {

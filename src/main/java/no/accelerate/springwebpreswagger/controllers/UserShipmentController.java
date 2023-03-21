@@ -17,6 +17,7 @@ import no.accelerate.springwebpreswagger.models.dto.user.UserPostDTO;
 import no.accelerate.springwebpreswagger.repositories.ShipmentRepository;
 import no.accelerate.springwebpreswagger.repositories.UserRepository;
 import no.accelerate.springwebpreswagger.services.shipment.ShipmentService;
+import no.accelerate.springwebpreswagger.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +32,18 @@ import java.util.stream.Collectors;
 public class UserShipmentController {
 
     private final ShipmentService shipmentService;
-    private ShipmentMapper shipmentMapper;
-    private ShipmentRepository shipmentRepository;
-    private UserRepository userRepository;
+    private final UserService userService;
+    private final ShipmentMapper shipmentMapper;
+    private final UserMapper userMapper;
+    private final ShipmentRepository shipmentRepository;
+    private final UserRepository userRepository;
     @Autowired
-    public UserShipmentController(ShipmentService shipmentService, ShipmentMapper shipmentMapper, ShipmentRepository shipmentRepository, UserRepository userRepository)
+    public UserShipmentController(ShipmentService shipmentService, UserService userService, ShipmentMapper shipmentMapper, UserMapper userMapper, ShipmentRepository shipmentRepository, UserRepository userRepository)
     {
         this.shipmentService = shipmentService;
+        this.userService = userService;
         this.shipmentMapper = shipmentMapper;
+        this.userMapper = userMapper;
         this.shipmentRepository = shipmentRepository;
         this.userRepository = userRepository;
     }
@@ -216,17 +221,21 @@ public class UserShipmentController {
     public ResponseEntity<?> getShipmentById(@PathVariable("shipment_id") Integer id, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
 
-        if(currentUser == null){
+        if (currentUser == null) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("No user is currently logged in.");
         }
 
-        List<Shipment> shipmentsById = shipmentService.findAllShipmentsByCustomerId(currentUser.getId());
+        Shipment shipment = shipmentService.findByIdAndCustomerId(id, currentUser.getId());
 
-        return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipmentsById.get(id)), HttpStatus.OK);
+        if (shipment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment not found");
+        }
+
+        return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipment), HttpStatus.OK);
     }
-    @PutMapping("/{shipment_id}")
+        @PutMapping("/{shipment_id}")
     @Operation(summary = "Update a shipment")
     @ApiResponses(value = {
             @ApiResponse(
@@ -288,7 +297,7 @@ public class UserShipmentController {
     })
     public ResponseEntity<?> updateUser(
             HttpSession session,
-            @Valid @RequestBody UserPostDTO userPostDTO) {
+            @RequestBody UserPostDTO updateUserPostDTO) {
 
         User currentUser = (User) session.getAttribute("user");
 
@@ -298,11 +307,7 @@ public class UserShipmentController {
                     .body("No user is currently logged in.");
         }
 
-        // Convert DTO to User entity
-        User newUser = UserMapper.INSTANCE.convertUserPostDtoToUser(userPostDTO);
-
-        // Return a successful registration response
-
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
+        User updatedUserPostDTO = userService.updateUser(currentUser.getId(), userMapper.convertUserPostDtoToUser(updateUserPostDTO));
+        return new ResponseEntity<>(updatedUserPostDTO, HttpStatus.OK);
     }
 }

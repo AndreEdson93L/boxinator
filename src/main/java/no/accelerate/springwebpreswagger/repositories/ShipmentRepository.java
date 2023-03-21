@@ -28,4 +28,6 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
     List<Shipment> findByCustomerId(Integer id);
     @Query("SELECT s FROM Shipment s WHERE s.customer.id = ?1")
     List<Shipment> findAllByCustomerId(Integer id);
+    @Query("SELECT s FROM Shipment s WHERE s.id = ?1 AND s.customer.id = ?2")
+    Shipment findByIdAndCustomerId(Integer id, Integer customerId);
 }

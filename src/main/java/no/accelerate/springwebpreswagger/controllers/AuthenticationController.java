@@ -143,9 +143,7 @@ public class AuthenticationController {
 
         // Return a successful registration response
         // ...
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body("User registered successfully!");
+        return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"User registered successfully!\"}");
     }
 
     @GetMapping("current-user")

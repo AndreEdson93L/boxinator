@@ -13,6 +13,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/settings/countries")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CountryController {
     private final CountryService countryService;
     private final CountryMapper countryMapper;

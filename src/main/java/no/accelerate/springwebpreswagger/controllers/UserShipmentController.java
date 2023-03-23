@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import no.accelerate.springwebpreswagger.mappers.ShipmentMapper;
 import no.accelerate.springwebpreswagger.mappers.UserMapper;
 import no.accelerate.springwebpreswagger.models.Shipment;
@@ -29,6 +28,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/user/shipments")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserShipmentController {
 
     private final ShipmentService shipmentService;

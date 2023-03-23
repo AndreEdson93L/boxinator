@@ -24,6 +24,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/admin")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AdminController {
 
     private final UserRepository userRepository;

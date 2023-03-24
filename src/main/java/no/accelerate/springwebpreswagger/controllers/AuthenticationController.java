@@ -24,7 +24,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/auth")
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticationController {
     private final UserRepository userRepository;
     private final UserMapper userMapper;

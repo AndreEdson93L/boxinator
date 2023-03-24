@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/admin/shipments")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("http://localhost:4200")
 public class AdminShipmentController {
 
     private final ShipmentService shipmentService;

@@ -13,6 +13,7 @@ import no.accelerate.springwebpreswagger.models.dto.user.LoginDTO;
 import no.accelerate.springwebpreswagger.models.dto.user.RegistrationDTO;
 import no.accelerate.springwebpreswagger.models.dto.user.UserDTO;
 import no.accelerate.springwebpreswagger.repositories.UserRepository;
+import no.accelerate.springwebpreswagger.utilities.ApiEntityResponse;
 import no.accelerate.springwebpreswagger.utilities.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
-//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthenticationController {
@@ -57,19 +57,19 @@ public class AuthenticationController {
             Optional<User> userOptional = userRepository.findByEmail(loginDTO.getEmail());
 
             if (userOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiEntityResponse("Please, provide an username"));
             }
 
             User user = userOptional.get();
             String hashedPassword = Utility.hashPassword(loginDTO.getPassword(), user.getSalt());
 
             if (!hashedPassword.equals(user.getPassword())) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiEntityResponse("Invalid email or password"));
             } else {
                 session.setAttribute("user", user);
             }
 
-            return ResponseEntity.ok().body("User successfully logged in");
+            return ResponseEntity.ok().body(new ApiEntityResponse("User successfully logged in"));
     }
 
     //@CrossOrigin
@@ -90,7 +90,7 @@ public class AuthenticationController {
         session.invalidate();
 
         // Return a successful logout response
-        return ResponseEntity.ok().body("User logged out successfully!");
+        return ResponseEntity.ok().body(new ApiEntityResponse("User logged out successfully!"));
     }
     //@CrossOrigin
     @PostMapping("register")
@@ -119,7 +119,7 @@ public class AuthenticationController {
         if(userRepository.findAllByEmail(registrationDTO.getEmail()).size() >= 1){
             return ResponseEntity
                     .badRequest()
-                    .body("Error: Email is already in use!");
+                    .body(new ApiEntityResponse("Error: Email is already in use!"));
         }
 
         // Convert DTO to User entity
@@ -142,9 +142,9 @@ public class AuthenticationController {
 
         // Return a successful registration response
         // ...
-        return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"User registered successfully!\"}");
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiEntityResponse("User registered successfully!"));
     }
-    //@CrossOrigin
+
     @GetMapping("current-user")
     @Operation(summary = "Get current user")
     @ApiResponses(value = {
@@ -162,7 +162,7 @@ public class AuthenticationController {
         if (currentUser == null) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("No user is currently logged in.");
+                    .body(new ApiEntityResponse("No user is currently logged in."));
         }
 
         // A DTO object to not expose sensitive details about the user.

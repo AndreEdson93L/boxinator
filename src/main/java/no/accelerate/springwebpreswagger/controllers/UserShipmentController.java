@@ -17,6 +17,7 @@ import no.accelerate.springwebpreswagger.repositories.ShipmentRepository;
 import no.accelerate.springwebpreswagger.repositories.UserRepository;
 import no.accelerate.springwebpreswagger.services.shipment.ShipmentService;
 import no.accelerate.springwebpreswagger.services.user.UserService;
+import no.accelerate.springwebpreswagger.utilities.ApiEntityResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+
 @RestController
 @RequestMapping("api/v1/user/shipments")
 public class UserShipmentController {
@@ -35,17 +36,13 @@ public class UserShipmentController {
     private final UserService userService;
     private final ShipmentMapper shipmentMapper;
     private final UserMapper userMapper;
-    private final ShipmentRepository shipmentRepository;
-    private final UserRepository userRepository;
     @Autowired
-    public UserShipmentController(ShipmentService shipmentService, UserService userService, ShipmentMapper shipmentMapper, UserMapper userMapper, ShipmentRepository shipmentRepository, UserRepository userRepository)
+    public UserShipmentController(ShipmentService shipmentService, UserService userService, ShipmentMapper shipmentMapper, UserMapper userMapper)
     {
         this.shipmentService = shipmentService;
         this.userService = userService;
         this.shipmentMapper = shipmentMapper;
         this.userMapper = userMapper;
-        this.shipmentRepository = shipmentRepository;
-        this.userRepository = userRepository;
     }
     @GetMapping
     @Operation(summary = "Get all shipments")
@@ -59,7 +56,7 @@ public class UserShipmentController {
                     }
             ),
             @ApiResponse(
-                    responseCode = "400",
+                    responseCode = "404",
                     description = "No shipment found",
                     content = {
                             @Content(mediaType = "application/json",
@@ -74,7 +71,7 @@ public class UserShipmentController {
         if(currentUser == null){
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("No user is currently logged in.");
+                    .body(new ApiEntityResponse("No user is currently logged in."));
         }
 
         List<Shipment> shipments = shipmentService.findAllShipmentsByCustomerId(currentUser.getId());
@@ -111,7 +108,7 @@ public class UserShipmentController {
         if(currentUser == null){
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("No user is currently logged in.");
+                    .body(new ApiEntityResponse("No user is currently logged in."));
         }
 
         List<Shipment> completedShipments = shipmentService.findCompletedShipments(currentUser.getId());
@@ -121,7 +118,6 @@ public class UserShipmentController {
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
 
-    //@CrossOrigin
     @GetMapping("/cancelled")
     @Operation(summary = "Get all cancelled shipments")
     @ApiResponses(value = {
@@ -148,7 +144,7 @@ public class UserShipmentController {
         if(currentUser == null){
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("No user is currently logged in.");
+                    .body(new ApiEntityResponse("No user is currently logged in."));
         }
 
         List<Shipment> cancelledShipments = shipmentService.findCancelledShipments(currentUser.getId());
@@ -178,7 +174,7 @@ public class UserShipmentController {
         if(currentUser == null){
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("No user is currently logged in.");
+                    .body(new ApiEntityResponse("No user is currently logged in."));
         }
 
         if (currentUser != null) {
@@ -226,7 +222,7 @@ public class UserShipmentController {
         if (currentUser == null) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("No user is currently logged in.");
+                    .body(new ApiEntityResponse("No user is currently logged in."));
         }
 
         Shipment shipment = shipmentService.findByIdAndCustomerId(id, currentUser.getId());
@@ -267,7 +263,7 @@ public class UserShipmentController {
         if(currentUser == null){
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("No user is currently logged in.");
+                    .body(new ApiEntityResponse("No user is currently logged in."));
         }
 
         Shipment shipment = shipmentService.findByIdAndCustomerId(id, currentUser.getId());
@@ -298,19 +294,17 @@ public class UserShipmentController {
                     content = @Content
             )
     })
-    public ResponseEntity<?> updateUser(
-            HttpSession session,
-            @RequestBody UserPostDTO updateUserPostDTO) {
+    public ResponseEntity<?> updateUser(HttpSession session, @RequestBody UserPostDTO updateUserPostDTO) {
 
         User currentUser = (User) session.getAttribute("user");
 
         if(currentUser == null){
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("No user is currently logged in.");
+                    .body(new ApiEntityResponse("No user is currently logged in."));
         }
 
         User updatedUserPostDTO = userService.updateUser(currentUser.getId(), userMapper.convertUserPostDtoToUser(updateUserPostDTO));
-        return new ResponseEntity<>(updatedUserPostDTO, HttpStatus.OK);
+        return new ResponseEntity<>(userMapper.convertUserToUserDTO(updatedUserPostDTO), HttpStatus.OK);
     }
 }

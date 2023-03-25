@@ -16,6 +16,7 @@ import no.accelerate.springwebpreswagger.models.dto.shipment.ShipmentPostDTO;
 import no.accelerate.springwebpreswagger.models.dto.user.UserPostDTO;
 import no.accelerate.springwebpreswagger.services.shipment.ShipmentService;
 import no.accelerate.springwebpreswagger.services.user.UserService;
+import no.accelerate.springwebpreswagger.utilities.ApiEntityResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -147,7 +148,7 @@ public class AdminShipmentController {
         if(currentUser == null){
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("No user is currently logged in.");
+                    .body(new ApiEntityResponse("No user is currently logged in."));
         }
 
         if (currentUser != null) {
@@ -274,7 +275,7 @@ public class AdminShipmentController {
         shipmentService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    //@CrossOrigin
+
     @DeleteMapping("/{account_id}")
     @Operation(summary = "Delete an account by id")
     @ApiResponses(value = {
@@ -287,7 +288,7 @@ public class AdminShipmentController {
         userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    //@CrossOrigin
+
     @PutMapping("/account/{userId}")
     @Operation(summary = "Update account by id")
     @ApiResponses(value = {

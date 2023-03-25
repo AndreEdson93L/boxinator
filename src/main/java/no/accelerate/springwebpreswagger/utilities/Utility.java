@@ -46,8 +46,4 @@ public class Utility {
         User currentUser = (User) session.getAttribute("user");
         return Optional.ofNullable(currentUser);
     }
-    //public static User findUserByEmail(String email, UserRepository userRepository) {
-    //    return userRepository.findByEmail(email).orElse(null);
-    //}
-
 }

@@ -9,6 +9,7 @@ import no.accelerate.springwebpreswagger.mappers.UserMapper;
 import no.accelerate.springwebpreswagger.models.dto.user.AdminDTO;
 import no.accelerate.springwebpreswagger.models.User;
 import no.accelerate.springwebpreswagger.mappers.AdminMapper;
+import no.accelerate.springwebpreswagger.models.dto.user.UserDTO;
 import no.accelerate.springwebpreswagger.models.dto.user.UserPostDTO;
 import no.accelerate.springwebpreswagger.repositories.UserRepository;
 import no.accelerate.springwebpreswagger.utilities.Utility;
@@ -22,7 +23,6 @@ import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 
-//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1/admin")
 public class AdminController {
@@ -60,7 +60,7 @@ public class AdminController {
                     }
             )
     })
-    public ResponseEntity<UserPostDTO> registerAdmin(@Valid @RequestBody AdminDTO adminDTO, @RequestParam("secret") String secret) {
+    public ResponseEntity<UserDTO> registerAdmin(@Valid @RequestBody AdminDTO adminDTO, @RequestParam("secret") String secret) {
         if (!adminRegistrationSecret.equals(secret)) {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
@@ -86,6 +86,6 @@ public class AdminController {
 
         userRepository.save(admin);
 
-        return new ResponseEntity<>(userMapper.convertUserToUserPostDto(admin), HttpStatus.CREATED);
+        return new ResponseEntity<>(userMapper.convertUserToUserDTO(admin), HttpStatus.CREATED);
     }
 }

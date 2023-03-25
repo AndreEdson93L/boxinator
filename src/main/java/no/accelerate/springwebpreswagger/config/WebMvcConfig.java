@@ -26,9 +26,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/api/**")
                 .allowedOrigins("http://localhost:4200")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-                .allowedHeaders("Content-Type", "Accept", "Authorization", "Access-Control-Request-Method")
-                .exposedHeaders("Content-Type", "Accept", "Authorization")
+                .allowedHeaders("*") // Allow all headers
+                .exposedHeaders("*") // Expose all headers
                 .allowCredentials(true).maxAge(3600);
     }
-
 }

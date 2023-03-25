@@ -22,10 +22,9 @@ import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1/admin")
-@CrossOrigin(origins = "http://localhost:4200")
-//@CrossOrigin(origins = "*", allowedHeaders = "*", allowedMethods = "*")
 public class AdminController {
 
     private final UserRepository userRepository;
@@ -40,7 +39,7 @@ public class AdminController {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
-
+    //@CrossOrigin
     @PostMapping("/register")
     @Operation(summary = "Register an admin.")
     @ApiResponses(value = {

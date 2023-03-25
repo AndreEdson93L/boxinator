@@ -26,9 +26,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("api/v1/user/shipments")
-@CrossOrigin(origins = "http://localhost:4200")
 public class UserShipmentController {
 
     private final ShipmentService shipmentService;
@@ -84,7 +84,7 @@ public class UserShipmentController {
 
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
-
+    //@CrossOrigin
     @GetMapping("/complete")
     @Operation(summary = "Get all completed shipments")
     @ApiResponses(value = {
@@ -121,6 +121,7 @@ public class UserShipmentController {
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
 
+    //@CrossOrigin
     @GetMapping("/cancelled")
     @Operation(summary = "Get all cancelled shipments")
     @ApiResponses(value = {
@@ -157,6 +158,7 @@ public class UserShipmentController {
 
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
+    //@CrossOrigin
     @PostMapping
     @Operation(summary = "Post a shipment")
     @ApiResponses(value = {
@@ -197,7 +199,7 @@ public class UserShipmentController {
 
         return new ResponseEntity<>(savedShipmentPostDTO, HttpStatus.CREATED);
     }
-
+    //@CrossOrigin
     @GetMapping("/{shipment_id}")
     @Operation(summary = "Get a shipment by id")
     @ApiResponses(value = {
@@ -235,7 +237,8 @@ public class UserShipmentController {
 
         return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipment), HttpStatus.OK);
     }
-        @PutMapping("/{shipment_id}")
+    //@CrossOrigin
+    @PutMapping("/{shipment_id}")
     @Operation(summary = "Update a shipment")
     @ApiResponses(value = {
             @ApiResponse(
@@ -272,6 +275,7 @@ public class UserShipmentController {
 
         return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipment), HttpStatus.OK);
     }
+    //@CrossOrigin
     @PutMapping("/account/update")
     @Operation(summary = "Update account")
     @ApiResponses(value = {

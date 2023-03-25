@@ -8,12 +8,11 @@ import no.accelerate.springwebpreswagger.services.country.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collection;
 
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
-@RequestMapping("/settings/countries")
-@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("api/v1/settings/countries")
 public class CountryController {
     private final CountryService countryService;
     private final CountryMapper countryMapper;
@@ -22,14 +21,17 @@ public class CountryController {
         this.countryService = countryService;
         this.countryMapper = countryMapper;
     }
+    //@CrossOrigin
     @GetMapping
     public ResponseEntity<Collection<Country>> getAllCountries(HttpSession session){
         return ResponseEntity.ok(countryService.findAll());
     }
+    //@CrossOrigin
     @PostMapping()
     public ResponseEntity<Country> createCountry(@RequestBody Country country) {
         return ResponseEntity.ok(countryService.add(country));
     }
+    //@CrossOrigin
     @PutMapping("/{countryId}")
     public ResponseEntity<CountryDTO> updateCountry(@PathVariable int countryId, @RequestBody CountryDTO updatedCountry) {
         return countryService.findById(countryId)

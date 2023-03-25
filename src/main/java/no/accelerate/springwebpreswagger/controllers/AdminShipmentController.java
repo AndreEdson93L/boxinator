@@ -25,9 +25,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("api/v1/admin/shipments")
-@CrossOrigin(origins = "http://localhost:4200")
 public class AdminShipmentController {
 
     private final ShipmentService shipmentService;
@@ -42,6 +42,7 @@ public class AdminShipmentController {
         this.shipmentService = shipmentService;
         this.shipmentMapper = shipmentMapper;
     }
+    //@CrossOrigin
     @GetMapping
     @Operation(summary = "Get all shipments")
     @ApiResponses(value = {
@@ -69,7 +70,7 @@ public class AdminShipmentController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
-
+    //@CrossOrigin
     @GetMapping("/complete")
     @Operation(summary = "Get all completed shipments")
     @ApiResponses(value = {
@@ -97,7 +98,7 @@ public class AdminShipmentController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
-
+    //@CrossOrigin
     @GetMapping("/cancelled")
     @Operation(summary = "Get all cancelled shipments")
     @ApiResponses(value = {
@@ -126,6 +127,7 @@ public class AdminShipmentController {
 
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
+    //@CrossOrigin
     @PostMapping
     @Operation(summary = "Post a shipment")
     @ApiResponses(value = {
@@ -167,8 +169,7 @@ public class AdminShipmentController {
         return new ResponseEntity<>(savedShipmentPostDTO, HttpStatus.CREATED);
     }
 
-
-
+    //@CrossOrigin
     @GetMapping("/{shipment_id}")
     @Operation(summary = "Get a shipment by id")
     @ApiResponses(value = {
@@ -194,7 +195,7 @@ public class AdminShipmentController {
 
         return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipmentService.findById(id)), HttpStatus.OK);
     }
-
+    //@CrossOrigin
     @GetMapping("/customer/{customer_id}")
     @Operation(summary = "Get all shipments by customer id")
     @ApiResponses(value = {
@@ -224,6 +225,7 @@ public class AdminShipmentController {
 
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
+    //@CrossOrigin
     @PutMapping("/{shipment_id}")
     @Operation(summary = "Update a shipment")
     @ApiResponses(value = {
@@ -259,6 +261,7 @@ public class AdminShipmentController {
 
         return new ResponseEntity<>(savedShipmentPostDTO, HttpStatus.OK);
     }
+    //@CrossOrigin
     @DeleteMapping("/shipment/{shipment_id}")
     @Operation(summary = "Delete shipment by id")
     @ApiResponses(value = {
@@ -271,6 +274,7 @@ public class AdminShipmentController {
         shipmentService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    //@CrossOrigin
     @DeleteMapping("/{account_id}")
     @Operation(summary = "Delete an account by id")
     @ApiResponses(value = {
@@ -283,6 +287,7 @@ public class AdminShipmentController {
         userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    //@CrossOrigin
     @PutMapping("/account/{userId}")
     @Operation(summary = "Update account by id")
     @ApiResponses(value = {
@@ -315,6 +320,4 @@ public class AdminShipmentController {
         }
         return ResponseEntity.ok(userMapper.convertUserToUserDTO(user));
     }
-
-
 }

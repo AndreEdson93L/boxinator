@@ -18,13 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
-import java.util.Set;
 
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("api/v1/auth")
-@CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticationController {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -33,7 +31,7 @@ public class AuthenticationController {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
-
+    //@CrossOrigin
     @PostMapping("login")
     @Operation(summary = "Log in a user")
     @ApiResponses(value = {
@@ -74,7 +72,7 @@ public class AuthenticationController {
             return ResponseEntity.ok().body("User successfully logged in");
     }
 
-
+    //@CrossOrigin
     @GetMapping("logout")
     @Operation(summary = "Log out a user")
     @ApiResponses(value = {
@@ -94,7 +92,7 @@ public class AuthenticationController {
         // Return a successful logout response
         return ResponseEntity.ok().body("User logged out successfully!");
     }
-
+    //@CrossOrigin
     @PostMapping("register")
     @Operation(summary = "Register a new user")
     @ApiResponses(value = {
@@ -146,7 +144,7 @@ public class AuthenticationController {
         // ...
         return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"User registered successfully!\"}");
     }
-
+    //@CrossOrigin
     @GetMapping("current-user")
     @Operation(summary = "Get current user")
     @ApiResponses(value = {

@@ -39,7 +39,7 @@ public class AdminController {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
-    //@CrossOrigin
+
     @PostMapping("/register")
     @Operation(summary = "Register an admin.")
     @ApiResponses(value = {

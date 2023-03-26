@@ -31,3 +31,7 @@ public class SecurityConfig {
 
 //implementation 'org.springframework.boot:spring-boot-starter-security'
 //implementation 'org.springframework.security.oauth:spring-security-oauth2'
+
+//spring.datasource.url= jdbc:postgresql://localhost:5432/pghibernate
+//spring.datasource.username= postgres
+//spring.datasource.password= postgres

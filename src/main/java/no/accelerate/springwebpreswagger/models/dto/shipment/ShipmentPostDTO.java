@@ -20,6 +20,8 @@ public class ShipmentPostDTO {
     private String boxColor;
     private String receiver;
     private String destination;
+    @Schema(description = "Cost of the shipment", required = true)
+    private Double cost;
 
     public enum ShipmentStatus {
         CREATED, RECEIVED, INTRANSIT, COMPLETED, CANCELLED

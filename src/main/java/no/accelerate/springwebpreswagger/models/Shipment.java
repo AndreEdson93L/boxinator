@@ -49,6 +49,8 @@ public class Shipment {
 
     @Column(nullable = false)
     private String destination;
+    @Column(nullable = true)
+    private Double cost;
     public enum ShipmentStatus {
         CREATED, RECIEVED, INTRANSIT, COMPLETED, CANCELLED
     }

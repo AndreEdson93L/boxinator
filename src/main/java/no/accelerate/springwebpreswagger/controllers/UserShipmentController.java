@@ -154,7 +154,7 @@ public class UserShipmentController {
 
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
-    //@CrossOrigin
+
     @PostMapping
     @Operation(summary = "Post a shipment")
     @ApiResponses(value = {
@@ -195,7 +195,7 @@ public class UserShipmentController {
 
         return new ResponseEntity<>(savedShipmentPostDTO, HttpStatus.CREATED);
     }
-    //@CrossOrigin
+
     @GetMapping("/{shipment_id}")
     @Operation(summary = "Get a shipment by id")
     @ApiResponses(value = {
@@ -233,7 +233,7 @@ public class UserShipmentController {
 
         return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipment), HttpStatus.OK);
     }
-    //@CrossOrigin
+
     @PutMapping("/{shipment_id}")
     @Operation(summary = "Update a shipment")
     @ApiResponses(value = {

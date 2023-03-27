@@ -12,9 +12,9 @@ public interface ShipmentMapper {
     ShipmentMapper INSTANCE = Mappers.getMapper(ShipmentMapper.class);
     ShipmentDTO mapShipmentToShipmentDTO(Shipment shipment);
     @Mapping(source = "customerId", target = "customer.id")
+    @Mapping(source = "cost", target = "cost")
     Shipment mapShipmentPostDTOToShipment(ShipmentPostDTO shipmentPostDTO);
     @Mapping(source = "customer.id", target = "customerId")
+    @Mapping(source = "cost", target = "cost")
     ShipmentPostDTO mapShipmentToShipmentPostDTO(Shipment shipment);
-
 }
-

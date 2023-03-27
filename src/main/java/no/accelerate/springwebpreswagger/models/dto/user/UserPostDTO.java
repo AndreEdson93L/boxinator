@@ -21,7 +21,6 @@ public class UserPostDTO {
     private String postalCode;
     private String contactNumber;
     private String password;
-
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String salt;
     @JsonIgnore

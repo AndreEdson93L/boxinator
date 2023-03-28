@@ -3,16 +3,10 @@ WORKDIR /app
 COPY . .
 RUN gradle bootJar
 
-
-
-FROM openjdk:17 AS runtime
+FROM openjdk:17-jdk-alpine AS runtime
 WORKDIR /app
 
-ENV SPRING_ACTIVE_PROFILES "prod"
-ENV MY_MESSAGE "its docker"
+ENV SPRING_ACTIVE_PROFILES=prod
+ENV MY_MESSAGE=its_docker
 
 EXPOSE 8080
-
-ARG JAR_FILE=/app/build/libs/*.jar
-COPY --from=build ${JAR_FILE} /app/app.jar
-ENTRYPOINT ["java","-jar","app.jar"]

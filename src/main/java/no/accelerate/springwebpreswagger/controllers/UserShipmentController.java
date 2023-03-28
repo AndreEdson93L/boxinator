@@ -268,6 +268,8 @@ public class UserShipmentController {
 
         Shipment shipment = shipmentService.findByIdAndCustomerId(id, currentUser.getId());
         shipment.setStatus(Shipment.ShipmentStatus.CANCELLED);
+        // Save the updated shipment to the database
+        shipmentService.update(shipment);
 
         return new ResponseEntity<>(shipmentMapper.mapShipmentToShipmentDTO(shipment), HttpStatus.OK);
     }

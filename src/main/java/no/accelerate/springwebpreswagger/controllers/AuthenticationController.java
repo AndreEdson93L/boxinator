@@ -31,7 +31,7 @@ public class AuthenticationController {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
-    //@CrossOrigin
+
     @PostMapping("login")
     @Operation(summary = "Log in a user")
     @ApiResponses(value = {
@@ -72,7 +72,6 @@ public class AuthenticationController {
             return ResponseEntity.ok().body(new ApiEntityResponse("User successfully logged in"));
     }
 
-    //@CrossOrigin
     @GetMapping("logout")
     @Operation(summary = "Log out a user")
     @ApiResponses(value = {
@@ -92,7 +91,6 @@ public class AuthenticationController {
         // Return a successful logout response
         return ResponseEntity.ok().body(new ApiEntityResponse("User logged out successfully!"));
     }
-    //@CrossOrigin
     @PostMapping("register")
     @Operation(summary = "Register a new user")
     @ApiResponses(value = {
@@ -137,7 +135,6 @@ public class AuthenticationController {
         newUser.setSalt(salt);
 
         // Save the new user (error I have in the comment below).
-        //Inferred type 'S' for type parameter 'S' is not within its bound; should implement 'org.apache.catalina.User'
         userRepository.save(newUser);
 
         // Return a successful registration response

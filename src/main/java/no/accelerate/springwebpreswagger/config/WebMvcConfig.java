@@ -5,9 +5,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-//implementation 'org.springframework.boot:spring-boot-starter-security'
-//implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-//implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
@@ -24,7 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:4200")
+                .allowedOrigins("http://localhost:4200/") // Allow any origin
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*") // Allow all headers
                 .exposedHeaders("*") // Expose all headers

@@ -168,7 +168,6 @@ public class AdminShipmentController {
         return new ResponseEntity<>(savedShipmentPostDTO, HttpStatus.CREATED);
     }
 
-    //@CrossOrigin
     @GetMapping("/{shipment_id}")
     @Operation(summary = "Get a shipment by id")
     @ApiResponses(value = {
@@ -224,7 +223,7 @@ public class AdminShipmentController {
 
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
-    //@CrossOrigin
+
     @PutMapping("/{shipment_id}")
     @Operation(summary = "Update a shipment")
     @ApiResponses(value = {

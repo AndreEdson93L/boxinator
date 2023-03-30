@@ -81,7 +81,7 @@ public class UserShipmentController {
 
         return new ResponseEntity<>(shipmentDTOs, HttpStatus.OK);
     }
-    //@CrossOrigin
+
     @GetMapping("/complete")
     @Operation(summary = "Get all completed shipments")
     @ApiResponses(value = {
